@@ -13,7 +13,8 @@
     "@department-of-veterans-affairs/component-library": "^51.4.0",
     "@department-of-veterans-affairs/css-library": "^0.23.1",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

@@ -8,6 +8,7 @@ import {
   VaTextarea,
   VaLoadingIndicator,
 } from "@department-of-veterans-affairs/component-library/dist/react-bindings";
+import Markdown from 'react-markdown'
 // import sampleData from "./Sample.json";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
 
   // const apiURL =
   //   "https://7zz3xzmge3.execute-api.us-east-1.amazonaws.com/main/postform";
+  // const viteProxyURL = "/api/main/postform";
   const devApiURL = "/.netlify/functions/api-proxy";
   // const apiKey = import.meta.env.VITE_API_KEY;
 
@@ -38,6 +40,7 @@ function App() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          // "x-api-key": `${import.meta.env.VITE_API_KEY}`,
         },
         body: JSON.stringify(data),
       });
@@ -141,7 +144,7 @@ function App() {
         <h1>Your narrative feedback:</h1>
         {formatText(feedbackBody).map((line, index) => (
           <p key={index} className="vads-u-margin-bottom--2">
-            {line}
+            <Markdown>{line}</Markdown>
           </p>
         ))}
         <VaButton text="Submit another narrative" onClick={resetForm} />
