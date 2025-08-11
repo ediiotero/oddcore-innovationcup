@@ -8,7 +8,7 @@ import {
   VaTextarea,
   VaLoadingIndicator,
 } from "@department-of-veterans-affairs/component-library/dist/react-bindings";
-import sampleData from "./Sample.json";
+// import sampleData from "./Sample.json";
 
 function App() {
   const [formData, setFormData] = useState({
@@ -27,13 +27,14 @@ function App() {
 
   const [feedback, setFeedback] = useState("");
 
-  const apiURL = "https://7zz3xzmge3.execute-api.us-east-1.amazonaws.com/main/postform";
-  const devApiURL = "/api/main/postform";
+  const apiURL =
+    "https://7zz3xzmge3.execute-api.us-east-1.amazonaws.com/main/postform";
+  // const devApiURL = "/api/main/postform"; // For local testing with Vite proxy
   const apiKey = import.meta.env.VITE_API_KEY;
 
   const postForm = async (data) => {
     try {
-      const response = await fetch(devApiURL, {
+      const response = await fetch(apiURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,7 +53,7 @@ function App() {
       }
 
       const result = await response.json();
-      console.log("Response from API:", JSON.parse(result.body));
+
       setFeedback(JSON.parse(result.body));
       setIsLoading(false);
       return result;
@@ -62,25 +63,25 @@ function App() {
           body: "Sorry we are unable to process your request at this time. Please try again later.",
         },
       });
+
       setIsLoading(false);
-      console.error("Error posting form data:", error);
       throw error;
     }
   };
 
   const resetForm = () => {
     setFeedback("");
-            setFormData({
-              analysis_type: "",
-              condition: "",
-              narrative: "",
-            });
-            setError({
-              analysisError: "",
-              narrativeError: "",
-              conditionError: "",
-            });
-  }
+    setFormData({
+      analysis_type: "",
+      condition: "",
+      narrative: "",
+    });
+    setError({
+      analysisError: "",
+      narrativeError: "",
+      conditionError: "",
+    });
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -118,9 +119,8 @@ function App() {
 
     if (validateForm()) {
       setIsLoading(true);
-      postForm(formData)
+      postForm(formData);
     }
-
   };
 
   const showFeedback = () => {
@@ -131,7 +131,7 @@ function App() {
         .filter((x) => x !== `---`);
     const feedbackBody = feedback.analysis_result?.body;
     return isLoading ? (
-      <div>
+      <div className="vads-u-margin-y--4">
         <VaLoadingIndicator
           message={"Processing your request..."}
           className="vads-u-margin-top--2"
@@ -145,34 +145,31 @@ function App() {
             {line}
           </p>
         ))}
-        <VaButton
-          text="Submit another narrative"
-          onClick={resetForm}
-        />
+        <VaButton text="Submit another narrative" onClick={resetForm} />
       </div>
     );
   };
 
   return (
     <>
-    <div className="vads-u-background-color--primary-darker">
-      <VaHeaderMinimal header="Narrative Analysis Tool"/>
-    </div>
+      <div className="vads-u-background-color--primary-darker">
+        <VaHeaderMinimal header="AdvocateAI - Narrative Analysis Tool" />
+      </div>
       {!isLoading && !feedback ? (
         <main className="vads-u-padding-x--4">
           <h1 className="vads-u-margin-top--2 vads-u-font-size--h2 vads-font-family-serif">
             Narrative Feedback Form
           </h1>
           <form
-          className="vads-u-margin-x--auto"
+            className="vads-u-margin-x--auto"
             onSubmit={(e) => {
               handleSubmit(e);
             }}
           >
             <VaSelect
-              className="vads-u-margin-y--2"
+              className="vads-u-margin-y--3"
               onVaSelect={(e) => handleChange(e)}
-              label="Select the document type for to analyse"
+              label="Select the document type to analyze"
               message-aria-describedby="Optional description text for screen readers"
               name="analysis_type"
               value={formData.analysis_type}
@@ -180,11 +177,16 @@ function App() {
               required
             >
               <option value="va_appeal">VA Appeal</option>
-              <option value="sec_10k">Section 10k</option>
+              <option value="sec_10k">Form 10-K</option>
             </VaSelect>
 
             <VaTextInput
               label="Please state your condition"
+              className={
+                error.conditionError
+                  ? "vads-u-margin-y--3"
+                  : "vads-u-margin-y--2"
+              }
               name="condition"
               error={error.conditionError}
               onInput={(e) => handleChange(e)}
@@ -192,6 +194,11 @@ function App() {
 
             <VaTextarea
               label="Please enter your narrative"
+              className={
+                error.narrativeError
+                  ? "vads-u-margin-y--3"
+                  : "vads-u-margin-y--2"
+              }
               required
               label-header-level={null}
               message-aria-describedby="Optional description text for screen readers"
