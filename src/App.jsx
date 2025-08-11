@@ -39,6 +39,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
           "x-api-key": apiKey,
+          "Access-Control-Allow-Origin": "*"
         },
         body: JSON.stringify(data),
       });
