@@ -27,19 +27,17 @@ function App() {
 
   const [feedback, setFeedback] = useState("");
 
-  const apiURL =
-    "https://7zz3xzmge3.execute-api.us-east-1.amazonaws.com/main/postform";
-  // const devApiURL = "/api/main/postform";
-  const apiKey = import.meta.env.VITE_API_KEY;
+  // const apiURL =
+  //   "https://7zz3xzmge3.execute-api.us-east-1.amazonaws.com/main/postform";
+  const devApiURL = "/.netlify/functions/api-proxy";
+  // const apiKey = import.meta.env.VITE_API_KEY;
 
   const postForm = async (data) => {
     try {
-      const response = await fetch(apiURL, {
+      const response = await fetch(devApiURL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-api-key": apiKey,
-          "Access-Control-Allow-Origin": "*"
         },
         body: JSON.stringify(data),
       });
